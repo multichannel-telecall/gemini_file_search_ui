@@ -13,11 +13,20 @@
 
 ## איך להריץ
 
-### אופן 1: שרת מלא (מומלץ) - Node + Python
+### אופן 1: פריסה ב-Vercel (מומלץ) — Python רץ על השרת
+
+כשהאפליקציה פרוסה ב-Vercel, **שירות ההעלאה (Python) רץ על Vercel** — אין צורך להריץ Python מקומית.
+
+- פתח את האפליקציה בכתובת הפרוסה (למשל `https://your-app.vercel.app`) והעלאות יעבדו אוטומטית.
+- מגבלה: קבצים עד 4 MB (מגבלת גוף הבקשה ב-Vercel). ראה `DEPLOY_VERCEL.md` לשלבי הפריסה.
+
+### אופן 2: הרצה מקומית — Node + Python
 
 העלאת קבצים מנוהלת ב-Python באמצעות Google GenAI SDK (upload + index במבצע אחד).
 
-**1. התקן את תלויות Python:**
+**אפשרות א — להריץ Python מקומית:**
+
+**1. התקן תלויות Python:**
 ```bash
 pip install -r requirements.txt
 ```
@@ -25,7 +34,6 @@ pip install -r requirements.txt
 **2. הפעל את שירות ההעלאה (Python) בטרמינל אחד:**
 ```bash
 python upload_service.py
-# או: npm run upload-service
 ```
 
 **3. הפעל את השרת (Node) בטרמינל שני:**
@@ -34,6 +42,22 @@ npm run dev
 ```
 
 זה יפתח את האפליקציה ב-`http://localhost:3001`
+
+**אפשרות ב — בלי Python מקומי (לשלוח העלאות לאפליקציה הפרוסה):**
+
+אם האפליקציה כבר פרוסה ב-Vercel, אפשר להריץ רק Node מקומית ולהפנות העלאות לשרת הפרוס:
+
+```bash
+# Windows (PowerShell) — החלף את הכתובת בכתובת האפליקציה שלך ב-Vercel
+$env:PYTHON_UPLOAD_URL="https://your-app.vercel.app"
+npm run dev
+```
+
+```bash
+# Linux/Mac
+export PYTHON_UPLOAD_URL="https://your-app.vercel.app"
+npm run dev
+```
 
 **Proxy:** אם אתה מאחורי proxy, הגדר לפני הפעלה:
 ```bash
@@ -46,15 +70,15 @@ export HTTPS_PROXY="http://user:pass@proxy:port"
 export SSL_CERT_FILE="/path/to/cert.pem"
 ```
 
-### אופן 2: שרת HTTP פשוט עם npm בלבד
+### אופן 3: שרת HTTP פשוט עם npm בלבד
 
 ```bash
 npm run dev
 ```
 
-**שים לב:** ללא שירות Python, העלאת קבצים לא תעבוד. הפעל `python upload_service.py` בהתאם.
+**שים לב:** ללא שירות Python מקומי או ללא `PYTHON_UPLOAD_URL` לכתובת הפרוסה, העלאת קבצים לא תעבוד. ראה אופן 2 למעלה.
 
-### אופן 3: שרת HTTP סטטי עם Python
+### אופן 4: שרת HTTP סטטי עם Python
 
 אם יש לך Python מותקן (לצפייה בלבד - ללא העלאה):
 
@@ -68,7 +92,7 @@ python -m SimpleHTTPServer 3000
 
 ואז פתח את הדפדפן ב-`http://localhost:3000`
 
-### אופן 4: פתיחה ישירה
+### אופן 5: פתיחה ישירה
 
 פשוט פתח את הקובץ `index.html` בדפדפן. **שים לב:** ייתכנו בעיות CORS כאשר פותחים ישירות מהמערכת קבצים.
 

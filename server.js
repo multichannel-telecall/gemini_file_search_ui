@@ -58,7 +58,7 @@ app.post('/api/upload-document', upload.single('file'), async (req, res) => {
         console.error('❌ Upload proxy error:', error.message);
         if (error.code === 'ECONNREFUSED') {
             return res.status(503).json({
-                error: 'Upload service unavailable. Start the Python upload service: python upload_service.py'
+                error: 'שירות ההעלאה לא פועל. מקומית: הרץ python upload_service.py או הגדר PYTHON_UPLOAD_URL לכתובת האפליקציה ב-Vercel.'
             });
         }
         res.status(500).json({
