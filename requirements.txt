@@ -1,0 +1,7 @@
+# Python dependencies for File Search upload service
+google-genai>=1.0.0
+flask>=3.0.0
+werkzeug>=3.0.0
+
+# Optional: for SOCKS5 proxy support
+# httpx[socks]

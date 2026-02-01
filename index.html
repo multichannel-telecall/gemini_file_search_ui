@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דשבורד ניהול קבצים לבוט ה-AI שלך</title>
+    <link rel="stylesheet" href="styles.css?v=202601261720">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top-bar">
+                <img src="logo.jpg" alt="Logo" class="header-logo">
+                <div class="header-brand">Multichannel by Telecall</div>
+            </div>
+            <div class="header-content">
+                <h1>
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    דשבורד ניהול קבצים לבוט ה-AI שלך!
+                </h1>
+                <p class="subtitle">העלאה וניהול קבצים במאגר Gemini File Search שלך</p>
+            </div>
+        </header>
+
+        <!-- Configuration Section -->
+        <section class="config-section">
+            <div class="config-card">
+                <h2>הגדרות</h2>
+                <div class="form-group">
+                    <label for="storeName">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                        </svg>
+                        שם המאגר
+                    </label>
+                    <input type="text" id="storeName" placeholder="לדוגמה: fileSearchStores/your-store-name" dir="ltr">
+                    <small class="hint">פורמט: fileSearchStores/store-id</small>
+                </div>
+                <div class="file-types-note">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <div>
+                        <strong>סוגי קבצים מותרים:</strong> קבצי pdf או markdown
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documents in Store Section -->
+        <section class="documents-section">
+            <div class="documents-card">
+                <div class="documents-header">
+                    <div class="documents-title">
+                        <h2>מסמכים במאגר</h2>
+                        <span id="documentCount" class="document-count" style="display: none;">0 מסמכים</span>
+                    </div>
+                    <button id="refreshBtn" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        הצג מסמכים
+                    </button>
+                </div>
+                <div id="documentsContainer" class="documents-container">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <p>לא נטענו מסמכים</p>
+                        <p class="small">לחץ על "הצג מסמכים" כדי לטעון מסמכים מהמאגר שלך</p>
+                    </div>
+                </div>
+                <div id="paginationControls" class="pagination-controls" style="display: none;">
+                    <button id="loadMoreBtn" class="btn btn-primary" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                        טען עוד
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- File Selection Section -->
+        <section class="file-section">
+            <div class="file-card">
+                <div class="file-header">
+                    <h2>העלאת קבצים</h2>
+                    <p class="file-upload-hint">קבצי pdf או markdown</p>
+                    <button id="selectFilesBtn" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        בחר קבצים
+                    </button>
+                </div>
+                <div id="fileList" class="file-list">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <p>לא נבחרו קבצים</p>
+                        <p class="small">לחץ על "בחר קבצים" כדי לבחור קבצים להעלאה</p>
+                    </div>
+                </div>
+                <div class="file-actions">
+                    <button id="uploadBtn" class="btn btn-success" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                        </svg>
+                        העלה קבצים
+                    </button>
+                    <button id="clearBtn" class="btn btn-secondary" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        נקה הכל
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status Section -->
+        <section id="statusSection" class="status-section" style="display: none;">
+            <div class="status-card">
+                <h2>סטטוס העלאה</h2>
+                <p class="status-hint">סטטוס ההעלאה מוצג למטה</p>
+                <div id="statusList" class="status-list"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-overlay-content">
+            <div class="loading-spinner"></div>
+            <p id="loadingOverlayText" class="loading-overlay-text">טוען...</p>
+        </div>
+    </div>
+
+    <!-- Hidden file input -->
+    <input type="file" id="fileInput" multiple style="display: none;">
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <svg class="modal-icon modal-icon-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <h3>אישור מחיקה</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">האם אתה בטוח שברצונך למחוק מסמך זה?</p>
+                <p class="modal-warning">פעולה זו לא ניתנת לביטול.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="confirmCancelBtn" class="btn btn-secondary">ביטול</button>
+                <button id="confirmDeleteBtn" class="btn btn-danger">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    מחק
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIN Modal -->
+    <div id="pinModal" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <svg class="modal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <h3 id="pinTitle">הזן קוד PIN</h3>
+            </div>
+            <div class="modal-body">
+                <p id="pinMessage">הזן את קוד ה-PIN שלך כדי להמשיך</p>
+                <div class="form-group" style="margin-top: 1.5rem;">
+                    <label for="pinInput">קוד PIN (4 ספרות)</label>
+                    <input type="text" id="pinInput" placeholder="הזן 4 ספרות" maxlength="4" autocomplete="off" style="text-align: center; font-size: 1.2rem; letter-spacing: 0.2rem; font-family: monospace;">
+                </div>
+                <div class="form-group" id="pinConfirmGroup" style="margin-top: 1rem;">
+                    <label for="pinConfirmInput">אשר קוד PIN</label>
+                    <input type="text" id="pinConfirmInput" placeholder="הזן 4 ספרות שוב" maxlength="4" autocomplete="off" style="text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem; font-family: monospace;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="pinCancelBtn" class="btn btn-secondary">ביטול</button>
+                <button id="pinSubmitBtn" class="btn btn-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    אישור
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google GenAI SDK for browser uploads -->
+    <script type="importmap">
+    {
+        "imports": {
+            "@google/genai": "https://esm.run/@google/genai"
+        }
+    }
+    </script>
+    <script src="app.js?v=202601261720"></script>
+</body>
+</html>
