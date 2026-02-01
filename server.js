@@ -81,12 +81,17 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => {
-    console.log(`\n🚀 Server running on http://localhost:${PORT}`);
-    console.log(`📁 Serving files from: ${__dirname}`);
-    console.log(`\n📋 Endpoints:`);
-    console.log(`   POST /api/upload-document - Proxy to Python (upload + index)`);
-    console.log(`   GET  /api/health - Health check`);
-    console.log(`\n⚠️  Start Python upload service: python upload_service.py`);
-    console.log(`   (or set PYTHON_UPLOAD_URL if running elsewhere)\n`);
-});
+// On Vercel, the app is used as serverless functions (api/upload-document.js, api/health.js)
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`\n🚀 Server running on http://localhost:${PORT}`);
+        console.log(`📁 Serving files from: ${__dirname}`);
+        console.log(`\n📋 Endpoints:`);
+        console.log(`   POST /api/upload-document - Proxy to Python (upload + index)`);
+        console.log(`   GET  /api/health - Health check`);
+        console.log(`\n⚠️  Start Python upload service: python upload_service.py`);
+        console.log(`   (or set PYTHON_UPLOAD_URL if running elsewhere)\n`);
+    });
+}
+
+module.exports = app;
