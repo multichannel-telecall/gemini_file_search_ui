@@ -143,6 +143,7 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_POST(self):
+        # Vercel Python serverless handler (not the Node proxy)
         # Vercel may pass path as /api/upload-document
         if "/api/upload-document" not in (self.path or ""):
             _send_json(self, 404, {"error": "Not found"})
