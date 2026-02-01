@@ -14,6 +14,9 @@ let authState = 'checking'; // 'checking', 'first-entry', 'pin-entry', 'authenti
 // API Base URL
 const API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
 
+// Max file size for upload (Vercel serverless body limit ~4.5 MB)
+const MAX_FILE_SIZE_BYTES = 4 * 1024 * 1024; // 4 MB
+
 // Encryption/Decryption - runs in Web Worker to prevent UI freeze
 let _cryptoWorker = null;
 let _cryptoPromises = {};
@@ -911,13 +914,20 @@ function handleExtensionsChange() {
 // File selection
 function handleFileSelect(event) {
     const files = Array.from(event.target.files);
-    
+    const skippedSize = [];
+
     for (const file of files) {
         const ext = '.' + file.name.split('.').pop().toLowerCase();
-        
-        // Check if extension is allowed
+
+        // Check if extension is allowed (PDF or Markdown only)
         if (allowedExtensions.size > 0 && !allowedExtensions.has(ext)) {
             console.log(`Skipping ${file.name} - extension ${ext} not allowed`);
+            continue;
+        }
+
+        // Check file size: max 4 MB (Vercel limit)
+        if (file.size > MAX_FILE_SIZE_BYTES) {
+            skippedSize.push(file.name);
             continue;
         }
 
@@ -935,6 +945,10 @@ function handleFileSelect(event) {
         };
 
         selectedFiles.push(fileInfo);
+    }
+
+    if (skippedSize.length > 0) {
+        showNotification(`הקבצים הבאים חרגו מ-4 MB ולא נוספו: ${skippedSize.join(', ')}`, 'error');
     }
 
     // Reset file input so same file can be selected again
@@ -1013,6 +1027,12 @@ async function handleUpload() {
 
     if (selectedFiles.length === 0) {
         showNotification('אנא בחר קבצים להעלאה', 'error');
+        return;
+    }
+
+    const tooLarge = selectedFiles.filter(f => f.file.size > MAX_FILE_SIZE_BYTES);
+    if (tooLarge.length > 0) {
+        showNotification('רק קבצים עד 4 MB. הסר קבצים מעל 4 MB מהרשימה.', 'error');
         return;
     }
 
