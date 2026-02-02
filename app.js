@@ -138,6 +138,13 @@ const pinSubmitBtn = document.getElementById('pinSubmitBtn');
 const pinCancelBtn = document.getElementById('pinCancelBtn');
 const pinMessage = document.getElementById('pinMessage');
 const pinTitle = document.getElementById('pinTitle');
+const welcomeModal = document.getElementById('welcomeModal');
+const welcomeModalCloseBtn = document.getElementById('welcomeModalCloseBtn');
+const welcomeModalStartBtn = document.getElementById('welcomeModalStartBtn');
+
+function hideWelcomeModal() {
+    if (welcomeModal) welcomeModal.classList.add('welcome-modal-hidden');
+}
 
 // Loading overlay helpers
 function showLoadingOverlay(text) {
@@ -227,7 +234,18 @@ function init() {
             }
         });
     }
-    
+
+    // Welcome modal: show on every visit; close on button or X or backdrop
+    if (welcomeModal) {
+        if (welcomeModalCloseBtn) welcomeModalCloseBtn.addEventListener('click', hideWelcomeModal);
+        if (welcomeModalStartBtn) welcomeModalStartBtn.addEventListener('click', hideWelcomeModal);
+        welcomeModal.addEventListener('click', (e) => {
+            if (e.target === welcomeModal || e.target.classList.contains('welcome-modal-backdrop')) {
+                hideWelcomeModal();
+            }
+        });
+    }
+
     // PIN input restrictions
     if (pinInput) {
         pinInput.addEventListener('keypress', (e) => {

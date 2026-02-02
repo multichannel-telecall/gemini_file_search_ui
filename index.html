@@ -3,10 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>דשבורד ניהול קבצים לבוט ה-AI שלך</title>
     <link rel="stylesheet" href="styles.css?v=202601261720">
 </head>
 <body>
+    <!-- Welcome Guide Modal (shown on every visit until dismissed) -->
+    <div id="welcomeModal" class="welcome-modal">
+        <div class="welcome-modal-backdrop"></div>
+        <div class="welcome-modal-box">
+            <header class="welcome-modal-header">
+                <svg class="welcome-modal-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <h2 class="welcome-modal-title">ברוכים הבאים לממשק הניהול קבצי המידע שלכם </h2>
+                <p class="welcome-modal-subtitle">מדריך מהיר לאבטחה ושימוש במערכת</p>
+                <button type="button" id="welcomeModalCloseBtn" class="welcome-modal-close" aria-label="סגור">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </header>
+            <div class="welcome-modal-body">
+                <div class="welcome-feature">
+                    <div class="welcome-feature-icon welcome-feature-icon-green">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                    </div>
+                    <div class="welcome-feature-text">
+                        <h3>אבטחת מידע (Client-Side Only)</h3>
+                        <p>הפרטיות שלך היא הערך העליון. מפתח ה-API שלך נשמר <span class="welcome-highlight-green">אך ורק בדפדפן שלך</span> ואינו עובר בשרתים חיצוניים. המפתח מוצפן מקומית להגנה מקסימלית.</p>
+                    </div>
+                </div>
+                <div class="welcome-feature">
+                    <div class="welcome-feature-icon welcome-feature-icon-blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+                    </div>
+                    <div class="welcome-feature-text">
+                        <h3>התחברות חכמה ומהירה</h3>
+                        <p>בכניסה הראשונה תתבקשו להזין מפתח API ולקבוע קוד <span class="welcome-pin-badge">PIN</span>. בפעמים הבאות? רק קוד ה-PIN יספיק לכניסה מהירה, עד לניקוי cookies או הפעלה מחדש של המחשב. <span class="welcome-warning">* שימו לב: אין לשכוח את קוד הPIN!.</span></p>
+                    </div>
+                </div>
+                <div class="welcome-feature">
+                    <div class="welcome-feature-icon welcome-feature-icon-amber">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                    </div>
+                    <div class="welcome-feature-text">
+                        <h3>ניהול קבצים ומאגרים</h3>
+                        <p>מאגר הוא בעצם תיקיית קבצים עבור סוכן ספציפי. בחרו מאגר כדי להעלות או למחוק קבצים. <span class="welcome-warning">* שימו לב: מחיקת קבצים היא פעולה סופית שאינה ניתנת לביטול.</span></p>
+                    </div>
+                </div>
+            </div>
+            <footer class="welcome-modal-footer">
+                <div class="welcome-modal-dots">
+                    <span class="welcome-dot"></span>
+                    <span class="welcome-dot"></span>
+                    <span class="welcome-dot welcome-dot-active"></span>
+                </div>
+                <button type="button" id="welcomeModalStartBtn" class="welcome-modal-start-btn">
+                    הבנתי, בוא נתחיל
+                    <svg class="welcome-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+                </button>
+            </footer>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Header -->
         <header class="header">
