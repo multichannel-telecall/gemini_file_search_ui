@@ -154,10 +154,7 @@ function hideLoadingOverlay() {
 
 // Initialize
 function init() {
-    console.log('=== Initialization Debug ===');
-    console.log('DOM readyState:', document.readyState);
-    
-    // Check all critical elements
+    // Check all critical elements (fail fast if missing)
     const elements = {
         storeNameInput,
         selectFilesBtn,
@@ -182,19 +179,12 @@ function init() {
         pinSubmitBtn,
         pinCancelBtn
     };
-    
-    console.log('Element check:');
     for (const [name, element] of Object.entries(elements)) {
         if (!element) {
             console.error(`❌ ${name} is NULL`);
-        } else {
-            console.log(`✅ ${name} found`);
         }
     }
-    
-    console.log('Initial nextPageToken:', nextPageToken);
-    console.log('=========================');
-    
+
     // Check authentication state first
     checkAuthState();
 
@@ -206,17 +196,11 @@ function init() {
     if (uploadBtn) uploadBtn.addEventListener('click', handleUpload);
     if (clearBtn) clearBtn.addEventListener('click', handleClear);
     if (refreshBtn) {
-        refreshBtn.addEventListener('click', () => {
-            console.log('Refresh button clicked');
-            loadDocuments(true);
-        });
+        refreshBtn.addEventListener('click', () => loadDocuments(true));
     }
     
     if (loadMoreBtn) {
-        loadMoreBtn.addEventListener('click', () => {
-            console.log('Load More button clicked, current nextPageToken:', nextPageToken);
-            loadDocuments(false);
-        });
+        loadMoreBtn.addEventListener('click', () => loadDocuments(false));
     } else {
         console.error('ERROR: loadMoreBtn element not found! Check HTML for id="loadMoreBtn"');
     }
@@ -277,7 +261,6 @@ function init() {
 // Authentication Management
 function checkAuthState() {
     const encryptedData = localStorage.getItem('gemini-encrypted');
-    console.log('Checking auth state, encrypted data exists:', !!encryptedData);
     if (!encryptedData) {
         // First time user
         authState = 'first-entry';
@@ -350,7 +333,6 @@ function showPinEntryUI() {
     if (fileSection) fileSection.style.display = 'none';
     
     // Always show login modal
-    console.log('Showing PIN entry UI, calling showPinModal...');
     showPinModal('login');
 }
 
@@ -921,7 +903,6 @@ function handleFileSelect(event) {
 
         // Check if extension is allowed (PDF or Markdown only)
         if (allowedExtensions.size > 0 && !allowedExtensions.has(ext)) {
-            console.log(`Skipping ${file.name} - extension ${ext} not allowed`);
             continue;
         }
 
@@ -1297,10 +1278,6 @@ function showNotification(message, type = 'info') {
 
 // Document Management Functions
 async function loadDocuments(isRefresh = true) {
-    console.log('=== loadDocuments called ===');
-    console.log('isRefresh:', isRefresh);
-    console.log('Current nextPageToken before loading:', nextPageToken);
-    
     // API key is already loaded from encrypted storage
     if (!apiKey) {
         showNotification('אנא התחבר תחילה', 'error');
@@ -1331,10 +1308,7 @@ async function loadDocuments(isRefresh = true) {
         let url = `${API_BASE_URL}/${storeName}/documents?key=${apiKey}`;
         if (!isRefresh && nextPageToken) {
             url += `&pageToken=${encodeURIComponent(nextPageToken)}`;
-            console.log('Adding pageToken to URL:', nextPageToken);
         }
-        
-        console.log('Fetching URL (without API key shown):', url.replace(/key=[^&]+/, 'key=***'));
 
         const response = await fetch(url);
 
@@ -1344,11 +1318,6 @@ async function loadDocuments(isRefresh = true) {
         }
 
         const data = await response.json();
-        
-        console.log('=== API Response Debug ===');
-        console.log('Full response data:', data);
-        console.log('Has nextPageToken?', 'nextPageToken' in data);
-        console.log('nextPageToken value:', data.nextPageToken);
 
         // Append new documents to existing ones
         const newDocuments = data.documents || [];
@@ -1356,12 +1325,6 @@ async function loadDocuments(isRefresh = true) {
 
         // Store next page token
         nextPageToken = data.nextPageToken || null;
-        
-        console.log('=== After Processing ===');
-        console.log('Stored nextPageToken:', nextPageToken);
-        console.log('nextPageToken type:', typeof nextPageToken);
-        console.log('Is null?', nextPageToken === null);
-        console.log('Is undefined?', nextPageToken === undefined);
 
         // Render documents
         renderDocuments();
@@ -1397,18 +1360,8 @@ async function loadDocuments(isRefresh = true) {
 function updatePaginationControls() {
     // Show load more button only if we have a next page token
     const hasNext = nextPageToken !== null && nextPageToken !== undefined;
-    
-    console.log('=== updatePaginationControls Debug ===');
-    console.log('nextPageToken:', nextPageToken);
-    console.log('hasNext:', hasNext);
-    console.log('documentsCount:', documents.length);
-    console.log('paginationControls element:', paginationControls);
-    console.log('loadMoreBtn element:', loadMoreBtn);
-    console.log('Current paginationControls display:', paginationControls?.style.display);
-    console.log('Current loadMoreBtn disabled:', loadMoreBtn?.disabled);
-    
+
     if (hasNext) {
-        console.log('>>> Setting button to VISIBLE and ENABLED');
         if (paginationControls) {
             paginationControls.style.display = 'flex';
         }
@@ -1416,7 +1369,6 @@ function updatePaginationControls() {
             loadMoreBtn.disabled = false;
         }
     } else {
-        console.log('>>> Setting button to HIDDEN and DISABLED');
         if (paginationControls) {
             paginationControls.style.display = 'none';
         }
@@ -1424,10 +1376,6 @@ function updatePaginationControls() {
             loadMoreBtn.disabled = true;
         }
     }
-    
-    console.log('After update - display:', paginationControls?.style.display);
-    console.log('After update - disabled:', loadMoreBtn?.disabled);
-    console.log('=== End Debug ===');
 }
 
 function renderDocuments() {

@@ -23,10 +23,6 @@ const upload = multer({
 
 // Proxy endpoint: forwards file uploads to Python upload service (uses Google GenAI SDK)
 app.post('/api/upload-document', upload.single('file'), async (req, res) => {
-    console.log('📤 Upload request received (proxying to Python service)');
-    console.log('  - Has file:', !!req.file);
-    console.log('  - File name:', req.file?.originalname);
-
     try {
         const { storeName, apiKey, displayName } = req.body;
 
@@ -84,13 +80,7 @@ app.get('/', (req, res) => {
 // On Vercel, the app is used as serverless functions (api/upload-document.js, api/health.js)
 if (!process.env.VERCEL) {
     app.listen(PORT, () => {
-        console.log(`\n🚀 Server running on http://localhost:${PORT}`);
-        console.log(`📁 Serving files from: ${__dirname}`);
-        console.log(`\n📋 Endpoints:`);
-        console.log(`   POST /api/upload-document - Proxy to Python (upload + index)`);
-        console.log(`   GET  /api/health - Health check`);
-        console.log(`\n⚠️  Start Python upload service: python upload_service.py`);
-        console.log(`   (or set PYTHON_UPLOAD_URL if running elsewhere)\n`);
+        console.log(`Server running on http://localhost:${PORT}`);
     });
 }
 
